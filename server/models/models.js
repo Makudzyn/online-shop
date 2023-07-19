@@ -72,7 +72,7 @@ Brand.belongsToMany(Type, {through: TypeBrand});
 Product.hasMany(Rating);
 Rating.belongsTo(Product);
 
-Product.hasMany(ProductInfo);
+Product.hasMany(ProductInfo, {as: "info"});
 ProductInfo.belongsTo(Product);
 
 Product.hasMany(BasketProduct);

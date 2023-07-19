@@ -10,10 +10,17 @@ async function getAll(req, res) {
   return res.json(types);
 }
 
-async function remove(req, res) {
-  const {typeId} = req.params;
-  const type = (await Type.findByPk({typeId})).destroy();
-  return res.json(type);
+async function deleteOne(req, res) {
+  const {id} = req.params;
+  try {
+    const type = (await Type.findOne({where: {id}})).destroy();
+    if (!type) {
+      return res.status(404).json({error: 'Type not found'}); //replace with ErrorApi
+    }
+    return res.json(type);
+  } catch (e) {
+    return res.status(500).json({ error: 'Failed to delete type'}); //replace with ErrorApi
+  }
 }
 
-module.exports = {create, getAll, remove}
+module.exports = {create, getAll, deleteOne}

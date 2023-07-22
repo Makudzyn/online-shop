@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
 import {observer} from "mobx-react-lite";
-import {Context} from "../main.jsx";
 import {ListGroup} from "react-bootstrap";
+import {Context} from "../main.jsx";
 
-const TypeBar = observer(() => {
+const BrandBar = observer(() => {
   const {product} = useContext(Context);
   return (
     <ListGroup variant={"flush"}>
@@ -13,23 +13,23 @@ const TypeBar = observer(() => {
         data-bs-theme="dark"
         variant={"secondary"}
       >
-        Types
+        Brands
       </ListGroup.Item>
       <hr></hr>
-      {product.types.map(type =>
+      {product.brands.map(brand =>
         <ListGroup.Item
-          key={type.id}
+          key={brand.id}
           bg="dark"
           data-bs-theme="dark"
           action
-          onClick={() => product.setSelectedType(type)}
+          onClick={() => product.setSelectedBrand(brand)}
           variant={"light"}
         >
-          {type.name}
+          {brand.name}
         </ListGroup.Item>
       )}
     </ListGroup>
   );
 });
 
-export default TypeBar;
+export default BrandBar;

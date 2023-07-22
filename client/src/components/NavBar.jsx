@@ -7,10 +7,11 @@ import Button from 'react-bootstrap/Button';
 import {ADMIN_PANEL_ROUTE, LOGIN_ROUTE, PRODUCT_ROUTE, SHOP_ROUTE} from "../utils/consts.js";
 import {observer} from "mobx-react-lite";
 import {Stack} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
 
 const NavBar = observer(() => {
   const {user} = useContext(Context);
-
+  const navigate = useNavigate();
   return (
     <Navbar bg="dark" data-bs-theme="dark">
       <Container>
@@ -18,8 +19,18 @@ const NavBar = observer(() => {
         {user.isAuth ?
           <Nav className="ml-auto">
             <Stack direction="horizontal" gap={2}>
-              <Button variant="outline-light" href={ADMIN_PANEL_ROUTE}>Admin panel</Button>
-              <Button variant="outline-light" href={SHOP_ROUTE}>Log out</Button>
+              <Button
+                variant="outline-light"
+                onClick={() => navigate(ADMIN_PANEL_ROUTE)}
+              >
+                Admin panel
+              </Button>
+              <Button
+                variant="outline-light"
+                onClick={() => navigate(LOGIN_ROUTE)}
+              >
+                Log out
+              </Button>
             </Stack>
           </Nav>
           :

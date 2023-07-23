@@ -1,12 +1,35 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {Card, Form, Container, Row, Button} from "react-bootstrap";
-import {NavLink, useLocation} from "react-router-dom";
-import {LOGIN_ROUTE, REGISTRATION_ROUTE} from "../utils/consts.js";
+import {NavLink, useLocation, useNavigate} from "react-router-dom";
+import {LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "../utils/consts.js";
+import {login, registration} from "../http/userAPI.js";
+import {observer} from "mobx-react-lite";
+import {Context} from "../main.jsx";
 
-const Auth = () => {
+const Auth = observer(() => {
+  const {user} = useContext(Context);
   const location = useLocation();
+  const navigate = useNavigate();
   const isLogin = location.pathname === LOGIN_ROUTE;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
+  const authOrLogin = async () => {
+    try {
+      let data;
+      if (isLogin) {
+        data = await login(email, password);
+      } else {
+        data = await registration(email, password);
+      }
+      user.setUser(user);
+      user.setIsAuth(true);
+      navigate(SHOP_ROUTE);
+    } catch (e) {
+      alert(e.response.data.message);
+    }
+  }
+    
   return (
     <Container
       className={"d-flex justify-content-center align-items-center"}
@@ -21,16 +44,22 @@ const Auth = () => {
           <Form.Control
             className={"mt-4"}
             placeholder={"Enter your e-mail here..."}
+            value={email}
+            onChange={e => setEmail(e.target.value)}
           />
           <Form.Control
             className={"mt-2"}
             placeholder={"Enter your password here..."}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            type={"password"}
           />
             <Button
               variant={"dark"}
               className={"mt-3"}
+              onClick={authOrLogin}
             >
-              Sign up
+              {isLogin ? "Sign in" : "Sign up"}
             </Button>
 
             {isLogin ?
@@ -64,6 +93,6 @@ const Auth = () => {
       </Card>
     </Container>
   );
-};
+});
 
 export default Auth;

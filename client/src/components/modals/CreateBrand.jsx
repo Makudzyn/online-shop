@@ -1,7 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
+import {createBrand, createType} from "../../http/productAPI.js";
 
 const CreateBrand = ({show, onHide}) => {
+  const [value, setValue] = useState('');
+  const addBrand = () => {
+    createBrand({name: value}).then(data => {
+        setValue("")
+        onHide()
+      }
+    );
+  }
   return (
     <Modal
       show={show}
@@ -18,12 +27,14 @@ const CreateBrand = ({show, onHide}) => {
       <Modal.Body>
         <Form>
           <Form.Control
+            value={value}
+            onChange={e => setValue(e.target.value)}
             placeholder={"Enter here brand title..."}
           />
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant={"outline-success"} onClick={onHide}>Add brand</Button>
+        <Button variant={"outline-success"} onClick={addBrand}>Add brand</Button>
       </Modal.Footer>
     </Modal>
   );

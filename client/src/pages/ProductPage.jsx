@@ -1,20 +1,20 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Card, Col, Container, Image, Row} from "react-bootstrap";
+import {useParams} from "react-router-dom";
+import {fetchOneProduct} from "../http/productAPI.js";
+import {REACT_APP_API_URL} from "../utils/consts.js";
 
 const ProductPage = () => {
-  const product =
-      {id: 1, name: "Iphone 13 pro", price: 24999, rating: 5, img: "https://place-hold.it/500x500/fab800/000.jpg&text=Iphone%2013%20pic&fontsize=16"};
-  const description = [
-    {id:1, title: "Memory", description: "5 Gigabit"},
-    {id:2, title: "Camera", description: "12 mpx"},
-    {id:3, title: "Processor", description: "Snapdragon 44"},
-    {id:4, title: "Core amount", description: "3"},
-    {id:5, title: "Accum", description: "4300"},
-  ];
+  const [product, setProduct] = useState({info: []});
+  const {id} = useParams();
+  useEffect(() => {
+    fetchOneProduct(id).then((data) => setProduct(data));
+  }, [])
+
   return (
     <Container className={"mt-2"}>
       <Col md={4}>
-        <Image width={300} height={300} src={product.img}/>
+        <Image width={300} height={300} src={REACT_APP_API_URL + product.img}/>
       </Col>
       <Col md={4}>
         <Row>
@@ -35,7 +35,7 @@ const ProductPage = () => {
       </Col>
       <Row className={"mt-3"}>
         <h2>Parameters</h2>
-        {description.map((item) => (
+        {product.info.map((item) => (
           <Row key={item.id}>
             {item.title}: {item.description}
           </Row>

@@ -2,7 +2,7 @@ import React from 'react';
 import {Card, Col, Image} from "react-bootstrap";
 import starIco from '../assets/star.png';
 import {useNavigate} from "react-router-dom";
-import {PRODUCT_ROUTE} from "../utils/consts.js";
+import {PRODUCT_ROUTE, REACT_APP_API_URL} from "../utils/consts.js";
 const ProductItem = ({product}) => {
   const navigate = useNavigate();
   return (
@@ -12,8 +12,9 @@ const ProductItem = ({product}) => {
         className={"w-150"}
       >
         <Image
-          className={"w-150 h-150"}
-          src={product.img}
+          width={150}
+          height={150}
+          src={REACT_APP_API_URL + product.img}
         />
         <div className={"d-flex justify-content-between align-items-center mt-1"}>
           <div>{product.name}</div>

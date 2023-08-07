@@ -1,5 +1,5 @@
 const ApiError = require("../error/ApiError.js")
-const {User, Basket} = require("../models/models");
+const {User, Cart} = require("../models/models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -22,7 +22,7 @@ async function registration(req, res, next) {
   }
   const hashPassword = await bcrypt.hash(password, 3);
   const user = await User.create({email, role, password: hashPassword});
-  const basket = await Basket.create({userId: user.id});
+  const basket = await Cart.create({userId: user.id});
   const token = generateJWT(user.id, user.email, user.role);
   return res.json({token});
 }
@@ -30,7 +30,7 @@ async function login(req, res, next) {
   const {email, password} = req.body;
   const user = await User.findOne({where: {email}});
   if (!user) {
-    return next(ApiError.badRequest("There is no user with this email!"));
+    return next(ApiError.notFound("There is no user with this email!"));
   }
   let comparePassword = bcrypt.compareSync(password, user.password);
   if (!comparePassword) {
@@ -44,16 +44,16 @@ async function authCheck(req, res, next) {
   return res.json({token});
 }
 
-async function deleteOne(req, res) {
+async function deleteOne(req, res, next) {
   const {id} = req.params;
   try {
     const user = (await User.findOne({where: {id}})).destroy();
     if (!user) {
-      return res.status(404).json({ error: 'User not found' }); //replace with ErrorApi
+      return next(ApiError.notFound('User not found'));
     }
     return res.json(user);
   } catch (e) {
-    return res.status(500).json({ error: 'Failed to delete user'}); //replace with ErrorApi
+    return next(ApiError.internal('Failed to delete user'));
   }
 }
 

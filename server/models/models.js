@@ -1,5 +1,5 @@
 const sequelize = require("../db");
-const {DataTypes} = require('sequelize');
+const {DataTypes} = require('sequelize'); // Класс с помощью которого задаются типы полей
 
 const User = sequelize.define('user', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -8,11 +8,11 @@ const User = sequelize.define('user', {
   password: {type: DataTypes.STRING},
 })
 
-const Basket = sequelize.define('basket', {
+const Cart = sequelize.define('cart', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
-const BasketProduct = sequelize.define('basket_product', {
+const CartProduct = sequelize.define('cart_product', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
@@ -20,7 +20,6 @@ const Rating = sequelize.define('rating', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
   rate: {type: DataTypes.INTEGER, allowNull: false},
 })
-
 
 const Product = sequelize.define('product', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -50,15 +49,15 @@ const TypeBrand = sequelize.define('type_brand', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
-
-User.hasOne(Basket);
-Basket.belongsTo(User);
+// Устагавливаем связи между таблицами
+User.hasOne(Cart);
+Cart.belongsTo(User);
 
 User.hasMany(Rating);
 Rating.belongsTo(User);
 
-Basket.hasMany(BasketProduct);
-BasketProduct.belongsTo(Basket);
+Cart.hasMany(CartProduct);
+CartProduct.belongsTo(Cart);
 
 Type.hasMany(Product);
 Product.belongsTo(Type);
@@ -66,6 +65,7 @@ Product.belongsTo(Type);
 Brand.hasMany(Product);
 Product.belongsTo(Brand);
 
+// Для связи многие-к-многим используем промежуточную таблицу
 Type.belongsToMany(Brand, {through: TypeBrand});
 Brand.belongsToMany(Type, {through: TypeBrand});
 
@@ -75,11 +75,11 @@ Rating.belongsTo(Product);
 Product.hasMany(ProductInfo, {as: "info"});
 ProductInfo.belongsTo(Product);
 
-Product.hasMany(BasketProduct);
-BasketProduct.belongsTo(Product);
+Product.hasMany(CartProduct);
+CartProduct.belongsTo(Product);
 
 module.exports = {
-  User, Basket, BasketProduct,
+  User, Cart, CartProduct,
   Product, ProductInfo, TypeBrand,
   Type, Brand, Rating
 }

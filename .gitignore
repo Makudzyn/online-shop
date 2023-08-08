@@ -1,5 +1,9 @@
+#Server
 server/node_modules
+server/static
+
+#Client
 client/node_modules
 client/.eslintrc.cjs
-node_modules
+
 .idea

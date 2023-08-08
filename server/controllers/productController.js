@@ -3,10 +3,11 @@ const path = require("path");
 const uuid = require('uuid'); // Для генерации уникального ID, имени файла
 const ApiError = require("../error/ApiError.js");
 
-async function create(req, res, next) { // Функция создания и добавления нового товара
+// Функция создания и добавления в БД нового товара
+async function create(req, res, next) {
   try {
     let {name, price, brandId, typeId, info} = req.body; // Из тела запроса получаем нужные для создания поля
-    const {img} = req.files; // Из запроса получаем файл, картинку товаров
+    const {img} = req.files; // Из запроса получаем файл, картинку товара
     let fileName = `${uuid.v4()}.jpg`; // Генерируем уникальное имя для файла
     await img.mv(path.resolve(__dirname, "..", 'static', fileName)); // Перемещаем файлы полученные от клиента в папку static
 
@@ -14,10 +15,10 @@ async function create(req, res, next) { // Функция создания и д
       {name, price, brandId, typeId, img: fileName} // Создаем и добавляем товар в БД, айди будет присвоен автоматически
     );                                                     // Рейтинг не указываем, он по дефолту 0
 
-    if (info) {
-      info = JSON.parse(info);
-      info.map(i => ProductInfo.create({
-        deviceId: i.deviceId,
+    if (info) { // Если есть дополнительные характеристики
+      info = JSON.parse(info); // Парсим, так как в из FormData получаем строку
+      info.map(i => ProductInfo.create({ // Для каждого элемента массива создаем ProductInfo
+        productId: product.id,
         title: i.title,
         description: i.description,
       }))
@@ -25,10 +26,12 @@ async function create(req, res, next) { // Функция создания и д
 
     return res.json(product);
   } catch (e) {
-    next(ApiError.internal(e.message));
+    next(ApiError.internal(e.message)); // Если при создании произошла ошибка
   }
 }
-async function getAll(req, res) { // Функция получения всех товаров
+
+// Функция получения всех товаров
+async function getAll(req, res) {
   let {typeId, brandId, limit, page} = req.query; // Получаем параметры из строки запроса
   page = page || 1; // Если страница не была задана - присваеваем 1
   limit = limit || 8; // Если лимит не был задан - присваеваем 10
@@ -43,30 +46,32 @@ async function getAll(req, res) { // Функция получения всех 
   } else { // Если тип и бренд не были заданы
     products = await Product.findAndCountAll({limit, offset});
   }
-  return res.json(products); // Возвращаем ответ в JSON формате
+  return res.json(products);
 }
 
-async function getOne(req, res) { // Функция получения товара по ID
+// Функция получения товара по ID
+async function getOne(req, res) {
   const {id} = req.params; // Из параметров получаем ID товара, который хотим получить
   const product = await Product.findOne(
     {
       where: {id},
-      include: [{model: ProductInfo, as: "info"}]
+      include: [{model: ProductInfo, as: "info"}] // Получаем массив характеристик
     }
   )
-  return res.json(product); // Возвращаем ответ в JSON формате
+  return res.json(product);
 }
 
-async function deleteOne(req, res, next) { // Функция удаления товара по ID
+// Функция удаления товара по ID
+async function deleteOne(req, res, next) {
   const {id} = req.params; // Из параметров получаем ID товара, который нужно удалить
   try {
     const product = (await Product.findOne({where: {id}})).destroy(); // Находим и удаляем товар, присваеваем результат в переменную
     if (!product) {
       return next(ApiError.notFound('Product not found')); // Если товар не найден возвращаем ошибку
     }
-    return res.json(product); // Возвращаем ответ в JSON формате
+    return res.json(product);
   } catch (e) {
-    return next(ApiError.internal('Failed to delete product')); // Если не удалось удалить
+    return next(ApiError.internal(e.message)); // Если не удалось удалить
   }
 }
 

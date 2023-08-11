@@ -10,7 +10,8 @@ export default class ProductStore {
     this._page = 1;
     this._totalCount = 0;
     this._limit = 3;
-    makeAutoObservable(this);
+    makeAutoObservable(this); // Для того чтобы Mobx следил за изменениями переменных
+                              // и при их изменении компоненты будут перерендериться
   }
 
   setTypes(types) {
@@ -24,10 +25,12 @@ export default class ProductStore {
   }
 
   setSelectedType(type) {
-    this._selectedType= type;
+    this.setPage(1);
+    this._selectedType = type;
   }
   setSelectedBrand(brand) {
-    this._selectedBrand= brand;
+    this.setPage(1);
+    this._selectedBrand = brand;
   }
 
   setPage(page) {
@@ -48,11 +51,9 @@ export default class ProductStore {
     return this._products;
   }
   get selectedType() {
-    this.setPage(1);
     return this._selectedType;
   }
   get selectedBrand() {
-    this.setPage(1);
     return this._selectedBrand;
   }
   get page() {

@@ -6,27 +6,28 @@ import ProductList from "../components/ProductList.jsx";
 import {observer} from "mobx-react-lite";
 import {Context} from "../main.jsx";
 import {fetchBrands, fetchProducts, fetchTypes} from "../http/productAPI.js";
-import Pages from "./Pages.jsx";
+import Pages from "../components/Pages.jsx";
 
-const Shop = observer(() => {
-  const {product} = useContext(Context);
-  useEffect(() => {
+const Shop = observer(() => { // Используем observer чтобы MobX отслеживал изменения и делал ре-рендер компонентов
+  const {product} = useContext(Context); // Данные о товаре из стора
+
+  useEffect(() => { // Получаем типы, бренды и продукты из БД
     fetchTypes().then(data => product.setTypes(data))
     fetchBrands().then(data => product.setBrands(data))
-    fetchProducts(null, null, 1, 3).then(data => {
+    fetchProducts(null, null, 1, 1).then(data => {
         product.setProducts(data.rows)
         product.setTotalCount(data.count)
       }
     )
   }, [])
 
-  useEffect(() => {
+  useEffect(() => { // Изменяем отображаемые продукты в зависимости от выбраных параметров сортировки и страницы
     fetchProducts(product.selectedType.id, product.selectedBrand.id, product.page, product.limit).then(data => {
         product.setProducts(data.rows)
         product.setTotalCount(data.count)
       }
     )
-  }, [product.page, product.selectedType, product.selectedBrand,])
+  }, [product.page, product.selectedType, product.selectedBrand])
 
   return (
     <Container>

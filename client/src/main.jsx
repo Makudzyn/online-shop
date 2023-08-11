@@ -2,10 +2,8 @@ import React, {createContext} from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {BrowserRouter} from "react-router-dom";
-import AppRouter from "./components/AppRouter.jsx";
 import UserStore from "./store/UserStore.js";
 import ProductStore from "./store/ProductStore.js";
-import NavBar from "./components/NavBar.jsx";
 import App from "./App.jsx";
 
 export const Context = createContext(null);

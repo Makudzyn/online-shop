@@ -8,18 +8,18 @@ import {Context} from "./main.jsx";
 import {observer} from "mobx-react-lite";
 import {Spinner} from "react-bootstrap";
 
-const App = observer(() => {
-  const {user} = useContext(Context);
+const App = observer(() => { // Используем observer чтобы MobX отслеживал изменения и делал ре-рендер компонентов
+  const {user} = useContext(Context); // Данные о пользователе из стора
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useEffect(() => { // С помощью функции check проверяем валидность токена, пока проверяем отображается спинер
     check().then(data => {
       user.setUser(true);
       user.setIsAuth(true);
-    }).finally(() => setLoading(false));
-  })
+    }).finally(() => setLoading(false)); // После получения ответа, вне зависимости от него убираем спинер
+  }, [])
 
-  if (loading) {
+  if (loading) { // Если loading === true, то есть идет загрузка - отображаем спинер
     return <Spinner animation={"border"} variant="dark"/>
   }
 

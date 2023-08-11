@@ -31,12 +31,9 @@ const AdminPanel = () => {
       >
         Add new product
       </Button>
-      <CreateType show={typeVisible} onHide={() => setTypeVisible(false
-      )}/>
-      <CreateBrand show={brandVisible} onHide={() => setBrandVisible(false
-      )}/>
-      <CreateNewProduct show={productVisible} onHide={() => setProductVisible(false
-      )}/>
+      <CreateType show={typeVisible} onHide={() => setTypeVisible(false)}/>
+      <CreateBrand show={brandVisible} onHide={() => setBrandVisible(false)}/>
+      <CreateNewProduct show={productVisible} onHide={() => setProductVisible(false)}/>
     </Container>
   );
 };

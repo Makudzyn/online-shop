@@ -6,8 +6,9 @@ import {REACT_APP_API_URL} from "../utils/consts.js";
 
 const ProductPage = () => {
   const [product, setProduct] = useState({info: []});
-  const {id} = useParams();
-  useEffect(() => {
+  const {id} = useParams(); // Получаем ID из строки запроса
+
+  useEffect(() => { // Подгружаем устройство из БД
     fetchOneProduct(id).then((data) => setProduct(data));
   }, [])
 
@@ -35,11 +36,11 @@ const ProductPage = () => {
       </Col>
       <Row className={"mt-3"}>
         <h2>Parameters</h2>
-        {product.info.map((item) => (
+        {product.info.map(item =>
           <Row key={item.id}>
             {item.title}: {item.description}
           </Row>
-        ))}
+        )}
       </Row>
     </Container>
   );

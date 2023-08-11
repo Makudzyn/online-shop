@@ -4,6 +4,7 @@ import {createType} from "../../http/productAPI.js";
 
 const CreateType = ({show, onHide}) => {
   const [value, setValue] = useState('');
+  // Функция создания/добавления нового типа
   const addType = () => {
     createType({name: value}).then(data => {
         setValue("")

@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
-import {createBrand, createType} from "../../http/productAPI.js";
+import {createBrand} from "../../http/productAPI.js";
 
 const CreateBrand = ({show, onHide}) => {
   const [value, setValue] = useState('');
+  // Функция создания/добавления нового бренда
   const addBrand = () => {
     createBrand({name: value}).then(data => {
         setValue("")

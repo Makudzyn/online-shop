@@ -3,8 +3,8 @@ import {observer} from "mobx-react-lite";
 import {ListGroup} from "react-bootstrap";
 import {Context} from "../main.jsx";
 
-const BrandBar = observer(() => {
-  const {product} = useContext(Context);
+const BrandBar = observer(() => { // Используем observer чтобы MobX отслеживал изменения и делал ре-рендер компонентов
+  const {product} = useContext(Context); // Данные о товаре(бренде) из стора
   return (
     <ListGroup variant={"flush"}>
       <ListGroup.Item

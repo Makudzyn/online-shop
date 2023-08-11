@@ -6,18 +6,19 @@ import {login, registration} from "../http/userAPI.js";
 import {observer} from "mobx-react-lite";
 import {Context} from "../main.jsx";
 
-const Auth = observer(() => {
-  const {user} = useContext(Context);
-  const location = useLocation();
+const Auth = observer(() => { // Используем observer чтобы MobX отслеживал изменения и делал ре-рендер компонентов
+  const {user} = useContext(Context); // Данные о пользователе из стора
+  const location = useLocation(); // Хук возвращает объект текущей локации (URL)
   const navigate = useNavigate();
-  const isLogin = location.pathname === LOGIN_ROUTE;
+  const isLogin = location.pathname === LOGIN_ROUTE; // Узнаем на какой странице пользователь - регистрации или входа
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // Функция авторизации или регистрации в зависимости от страницы на которой находится пользователь
   const authOrLogin = async () => {
     try {
       let data;
-      if (isLogin) {
+      if (isLogin) { // В зависимости от маршрута отображаем форму регистрации или авторизации
         data = await login(email, password);
       } else {
         data = await registration(email, password);
@@ -31,6 +32,7 @@ const Auth = observer(() => {
   }
     
   return (
+    // В зависимости от того авторизирован пользователь или нет выводим разный текст в полях
     <Container
       className={"d-flex justify-content-center align-items-center"}
       style={{height: window.innerHeight - 54}}

@@ -1,17 +1,12 @@
 import {makeAutoObservable} from "mobx";
 
-export default class ProductStore {
+export default class PaginationStore {
   constructor() {
-    this._products = [];
     this._page = 1;
     this._totalCount = 0;
     this._limit = 3;
     makeAutoObservable(this); // Для того чтобы Mobx следил за изменениями переменных
                               // и при их изменении компоненты будут перерендериться
-  }
-
-  setProducts(products) {
-    this._products = products;
   }
 
   setPage(page) {
@@ -22,9 +17,6 @@ export default class ProductStore {
     this._totalCount = totalCount;
   }
 
-  get products() {
-    return this._products;
-  }
   get page() {
     return this._page;
   }

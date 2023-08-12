@@ -1,27 +1,26 @@
 import {makeAutoObservable} from "mobx";
 
-export default class BrandStore {
+export default class TypeStore {
   constructor() {
-    this._brands = [];
-    this._selectedBrand = {};
+    this._types = [];
+    this._selectedType = {};
     makeAutoObservable(this); // Для того чтобы Mobx следил за изменениями переменных
                               // и при их изменении компоненты будут перерендериться
   }
 
-  setBrands(brands) {
-    this._brands = brands;
+  setTypes(types) {
+    this._types = types;
   }
-  setSelectedBrand(brand) {
-    // this.setPage(1);
-    this._selectedBrand = brand;
-  }
-
-  get brands() {
-    return this._brands;
+  setSelectedType(type) {
+    this._selectedType = type;
   }
 
-  get selectedBrand() {
-    return this._selectedBrand;
+  get types() {
+    return this._types;
+  }
+
+  get selectedType() {
+    return this._selectedType;
   }
 
 }

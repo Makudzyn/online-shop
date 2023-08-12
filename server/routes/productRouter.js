@@ -1,7 +1,7 @@
 const Router = require('express');
 const router = new Router();
 const productController = require('../controllers/productController.js');
-const checkRole = require("../middleware/checkRoleMiddleware");
+const checkRole = require("../middleware/checkAuthAndRoleMiddleware");
 
 router.post('/', checkRole("ADMIN"), productController.create)
 router.get('/', productController.getAll)

@@ -18,11 +18,12 @@ async function getAll(req, res) {
 async function deleteOne(req, res, next) {
   const {id} = req.params; // Из параметров получаем ID бренда, который нужно удалить
   try {
-    const brand = (await Brand.findOne({where: {id}})).destroy(); // Находим и удаляем бренд, присваеваем результат в переменную
+    const brand = await Brand.findOne({where: {id}}); // Находим бренд
     if (!brand) {
       return next(ApiError.notFound('Brand not found')) // Если бренд не найден возвращаем ошибку
     }
-    return res.json(brand); // Возвращаем ответ в JSON формате
+    await brand.destroy(); // Удаляем бренд
+    return res.status(204).end(); // Возвращаем ответ с кодом 204 No Content
   } catch (e) {
     return next(ApiError.internal(e.message)) // Если не удалось удалить
   }

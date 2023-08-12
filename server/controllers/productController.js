@@ -65,11 +65,12 @@ async function getOne(req, res) {
 async function deleteOne(req, res, next) {
   const {id} = req.params; // Из параметров получаем ID товара, который нужно удалить
   try {
-    const product = (await Product.findOne({where: {id}})).destroy(); // Находим и удаляем товар, присваеваем результат в переменную
+    const product = await Product.findOne({where: {id}}); // Находим товар
     if (!product) {
       return next(ApiError.notFound('Product not found')); // Если товар не найден возвращаем ошибку
     }
-    return res.json(product);
+    await product.destroy(); // Удаляем товар
+    return res.status(204).end(); // Возвращаем ответ с кодом 204 No Content
   } catch (e) {
     return next(ApiError.internal(e.message)); // Если не удалось удалить
   }

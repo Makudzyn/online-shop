@@ -18,14 +18,32 @@ async function getAll(req, res) {
 async function deleteOne(req, res, next) {
   const {id} = req.params; // Из параметров получаем ID типа, который нужно удалить
   try {
-    const type = (await Type.findOne({where: {id}})).destroy(); // Находим и удаляем тип, присваеваем результат в переменную
+    const type = await Type.findOne({where: {id}}); // Находим тип
     if (!type) {
-      return next(ApiError.notFound('Type not found'))  // Если тип не найден возвращаем ошибку
+      return next(ApiError.notFound('Type not found'));  // Если тип не найден возвращаем ошибку
     }
-    return res.json(type);
+    await type.destroy(); // Удаляем тип
+    return res.status(204).end(); // Возвращаем ответ с кодом 204 No Content
   } catch (e) {
     return next(ApiError.internal(e.message)) // Если не удалось удалить
   }
 }
 
-module.exports = {create, getAll, deleteOne}
+// Функция обновления типа по ID
+async function update(req, res, next) {
+  const {id} = req.params; // Из параметров получаем ID типа, который нужно обновить
+  const {name} = req.body; // Из тела запроса получаем новое название типа
+  try {
+    const type = await Type.findOne({where:{id}}); // Находим тип
+    if (!type) {
+      return next(ApiError.notFound('Type not found')); // Если тип не найден, возвращаем ошибку
+    }
+    type.name = name; // Обновляем название типа
+    await type.save(); // Сохраняем обновленные данные
+    return res.json(type); // Возвращаем обновленный тип
+  } catch (e) {
+    return next(ApiError.internal(e.message)); // Если не удалось обновить
+  }
+}
+
+module.exports = {create, getAll, deleteOne, update}

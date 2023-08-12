@@ -4,7 +4,7 @@ import {ListGroup} from "react-bootstrap";
 import {Context} from "../main.jsx";
 
 const BrandBar = observer(() => { // Используем observer чтобы MobX отслеживал изменения и делал ре-рендер компонентов
-  const {product} = useContext(Context); // Данные о товаре(бренде) из стора
+  const {brandStore} = useContext(Context); // Данные о товаре(бренде) из стора
   return (
     <ListGroup variant={"flush"}>
       <ListGroup.Item
@@ -16,13 +16,13 @@ const BrandBar = observer(() => { // Используем observer чтобы Mo
         Brands
       </ListGroup.Item>
       <hr></hr>
-      {product.brands.map(brand =>
+      {brandStore.brands.map(brand =>
         <ListGroup.Item
           key={brand.id}
           bg="dark"
           data-bs-theme="dark"
           action
-          onClick={() => product.setSelectedBrand(brand)}
+          onClick={() => brandStore.setSelectedBrand(brand)}
           variant={"light"}
         >
           {brand.name}

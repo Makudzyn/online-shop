@@ -4,8 +4,8 @@ import {Context} from "../main.jsx";
 import {Pagination} from "react-bootstrap";
 
 const Pages = observer(() => {
-  const {product} = useContext(Context);
-  const pageCount = Math.ceil(product.totalCount / product.limit);
+  const {paginationStore} = useContext(Context);
+  const pageCount = Math.ceil(paginationStore.totalCount / paginationStore.limit);
   const pages = [];
 
   for (let i = 0; i < pageCount; i++) {
@@ -17,8 +17,8 @@ const Pages = observer(() => {
       {pages.map(page =>
         <Pagination.Item
           key={page}
-          active={product.page === page}
-          onClick={() => product.setPage(page)}
+          active={paginationStore.page === page}
+          onClick={() => paginationStore.setPage(page)}
         >
           {page}
         </Pagination.Item>

@@ -5,10 +5,10 @@ import {Row} from "react-bootstrap";
 import ProductItem from "./ProductItem.jsx";
 
 const ProductList = observer(() => { // Используем observer чтобы MobX отслеживал изменения и делал ре-рендер компонентов
-  const {product} = useContext(Context); // Данные о товаре из стора
+  const {productStore} = useContext(Context); // Данные о товаре из стора
   return (
     <Row className={"d-flex"}>
-      {product.products.map(product =>
+      {productStore.products.map(product =>
         <ProductItem key={product.id} product={product}/>
       )}
     </Row>

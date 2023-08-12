@@ -9,25 +9,26 @@ import {fetchBrands, fetchProducts, fetchTypes} from "../http/productAPI.js";
 import Pages from "../components/Pages.jsx";
 
 const Shop = observer(() => { // Используем observer чтобы MobX отслеживал изменения и делал ре-рендер компонентов
-  const {product} = useContext(Context); // Данные о товаре из стора
+  const {productStore, typeStore, brandStore, paginationStore} = useContext(Context); // Данные о товаре из стора
 
   useEffect(() => { // Получаем типы, бренды и продукты из БД
-    fetchTypes().then(data => product.setTypes(data))
-    fetchBrands().then(data => product.setBrands(data))
+    fetchTypes().then(data => typeStore.setTypes(data))
+    fetchBrands().then(data => brandStore.setBrands(data))
     fetchProducts(null, null, 1, 1).then(data => {
-        product.setProducts(data.rows)
-        product.setTotalCount(data.count)
+      productStore.setProducts(data.rows)
+      productStore.setTotalCount(data.count)
       }
     )
   }, [])
 
   useEffect(() => { // Изменяем отображаемые продукты в зависимости от выбраных параметров сортировки и страницы
-    fetchProducts(product.selectedType.id, product.selectedBrand.id, product.page, product.limit).then(data => {
-        product.setProducts(data.rows)
-        product.setTotalCount(data.count)
+    fetchProducts(typeStore.selectedType.id, brandStore.selectedBrand.id, paginationStore.page, paginationStore.limit).then(data => {
+      productStore.setProducts(data.rows)
+      productStore.setTotalCount(data.count)
       }
     )
-  }, [product.page, product.selectedType, product.selectedBrand])
+    paginationStore.setPage(1);
+  }, [paginationStore.page, typeStore.selectedType, brandStore.selectedBrand])
 
   return (
     <Container>

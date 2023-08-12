@@ -7,7 +7,7 @@ import {observer} from "mobx-react-lite";
 import {Context} from "../main.jsx";
 
 const Auth = observer(() => { // Используем observer чтобы MobX отслеживал изменения и делал ре-рендер компонентов
-  const {user} = useContext(Context); // Данные о пользователе из стора
+  const {userStore} = useContext(Context); // Данные о пользователе из стора
   const location = useLocation(); // Хук возвращает объект текущей локации (URL)
   const navigate = useNavigate();
   const isLogin = location.pathname === LOGIN_ROUTE; // Узнаем на какой странице пользователь - регистрации или входа
@@ -23,8 +23,8 @@ const Auth = observer(() => { // Используем observer чтобы MobX �
       } else {
         data = await registration(email, password);
       }
-      user.setUser(user);
-      user.setIsAuth(true);
+      userStore.setUser(userStore);
+      userStore.setIsAuth(true);
       navigate(SHOP_ROUTE);
     } catch (e) {
       alert(e.response.data.message);

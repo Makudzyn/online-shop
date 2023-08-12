@@ -5,12 +5,12 @@ import {SHOP_ROUTE} from "../utils/consts.js";
 import {Context} from "../main.jsx";
 
 const AppRouter = () => {
-  const {user} = useContext(Context); // Данные о пользователе из стора
+  const {userStore} = useContext(Context); // Данные о пользователе из стора
 
   return (
     <Routes>
       {/*Если пользователь авторизирован выводим дополнительные маршруты*/}
-      {user.isAuth && authRoutes.map(({path, Component}) =>
+      {userStore.isAuth && authRoutes.map(({path, Component}) =>
         <Route key={path} path={path} element={<Component/>}/>
       )}
       {/*Если пользователь не авторизирован он получает только публичные маршруты*/}

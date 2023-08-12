@@ -11,13 +11,13 @@ import {useNavigate} from "react-router-dom";
 
 // Навигационная панель
 const NavBar = observer(() => { // Используем observer чтобы MobX отслеживал изменения и делал ре-рендер компонентов
-  const {user} = useContext(Context); // Данные о пользователе из стора
+  const {userStore} = useContext(Context); // Данные о пользователе из стора
   const navigate = useNavigate();
 
   // Функция выхода из аккаунта пользователя
   const logOut = () => {
-    user.setUser({});
-    user.setIsAuth(false);
+    userStore.setUser({});
+    userStore.setIsAuth(false);
   }
 
   return (
@@ -26,7 +26,7 @@ const NavBar = observer(() => { // Используем observer чтобы MobX
         <Navbar.Brand href={SHOP_ROUTE}>SHOP4U</Navbar.Brand>
         {/*Если пользователь авторизован он получает дополнительные кнопки(маршруты) в навигационной панели*/}
         {/*Если пользователь не авторизован, то выводим кнопку входа в аккаунт*/}
-        {user.isAuth ?
+        {userStore.isAuth ?
           <Nav className="ml-auto">
             <Stack direction="horizontal" gap={2}>
               <Button

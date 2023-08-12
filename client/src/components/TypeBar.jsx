@@ -4,7 +4,7 @@ import {Context} from "../main.jsx";
 import {ListGroup} from "react-bootstrap";
 
 const TypeBar = observer(() => {
-  const {product} = useContext(Context);
+  const {typeStore} = useContext(Context);
   return (
     <ListGroup variant={"flush"}>
       <ListGroup.Item
@@ -16,13 +16,13 @@ const TypeBar = observer(() => {
         Types
       </ListGroup.Item>
       <hr></hr>
-      {product.types.map(type =>
+      {typeStore.types.map(type =>
         <ListGroup.Item
           key={type.id}
           bg="dark"
           data-bs-theme="dark"
           action
-          onClick={() => product.setSelectedType(type)}
+          onClick={() => typeStore.setSelectedType(type)}
           variant={"light"}
         >
           {type.name}

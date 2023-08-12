@@ -7,7 +7,7 @@ import {
   SHOP_ROUTE
 } from "./utils/consts.js";
 import AdminPanel from "./pages/AdminPanel.jsx";
-import Basket from "./pages/Basket.jsx";
+import Cart from "./pages/Cart.jsx";
 import Shop from "./pages/Shop.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import Auth from "./pages/Auth.jsx";
@@ -20,7 +20,7 @@ export const authRoutes = [
   },
   {
     path: CART_ROUTE,
-    Component: Basket,
+    Component: Cart,
   },
 ];
 

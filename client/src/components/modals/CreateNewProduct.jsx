@@ -4,7 +4,7 @@ import {Context} from "../../main.jsx";
 import {createProduct, fetchBrands, fetchProducts, fetchTypes} from "../../http/productAPI.js";
 
 const CreateNewProduct = ({show, onHide}) => {
-  const {product} = useContext(Context); // Данные о товаре из стора
+  const {productStore, brandStore, typeStore} = useContext(Context); // Данные о товаре из стора
 
   const [name, setName] = useState('');
   const [selectedBrand, setSelectedBrand] = useState({id: null, name: ""});
@@ -14,8 +14,8 @@ const CreateNewProduct = ({show, onHide}) => {
   const [info, setInfo] = useState([]);
 
   useEffect(() => { // Получаем типы и бренды из БД
-    fetchTypes().then(data => product.setTypes(data))
-    fetchBrands().then(data => product.setBrands(data))
+    fetchTypes().then(data => typeStore.setTypes(data))
+    fetchBrands().then(data => brandStore.setBrands(data))
   }, [])
 
   // Функция для получения выбранного пользователем изображения
@@ -68,7 +68,7 @@ const CreateNewProduct = ({show, onHide}) => {
             {selectedType.name || "Select type of new product"}
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {product.types.map(type =>
+            {typeStore.types.map(type =>
               <Dropdown.Item
                 onClick={() => setSelectedType(type)}
                 key={type.id}
@@ -83,7 +83,7 @@ const CreateNewProduct = ({show, onHide}) => {
             {selectedBrand.name || "Select brand of new product"}
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {product.brands.map(brand =>
+            {brandStore.brands.map(brand =>
               <Dropdown.Item
                 onClick={() => setSelectedBrand(brand)}
                 key={brand.id}

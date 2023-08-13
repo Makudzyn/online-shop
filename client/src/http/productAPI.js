@@ -5,6 +5,18 @@ export const createType = async (type) => {
   const {data} = await $authHost.post('api/type', type);
   return data;
 }
+
+// Запрос на изменение типа
+export const updateType = async (id, updatedType) => {
+  const {data} = await $authHost.put(`api/type/${id}`, updatedType);
+  return data;
+}
+
+// Запрос на удаление типа
+export const deleteType = async (id) => {
+  const {data} = await $authHost.delete(`api/type/${id}`);
+  return data;
+}
 // Запрос на получение всех типов
 export const fetchTypes = async () => {
   const {data} = await $host.get('api/type');

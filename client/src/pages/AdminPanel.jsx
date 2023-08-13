@@ -11,9 +11,9 @@ const AdminPanel = () => {
   const [productVisible, setProductVisible] = useState(false);
   return (
     <Container className={"d-flex flex-column"}>
-      <AdminPanelButton modalFunction={setTypeVisible} buttonTitle={"Edit/Remove types"}/>
-      <AdminPanelButton modalFunction={setBrandVisible} buttonTitle={"Edit/Remove brands"}/>
-      <AdminPanelButton modalFunction={setProductVisible} buttonTitle={"Edit/Remove products"}/>
+      <AdminPanelButton modalFunction={setTypeVisible} buttonTitle={"Add/Edit/Remove types"}/>
+      <AdminPanelButton modalFunction={setBrandVisible} buttonTitle={"Add/Edit/Remove brands"}/>
+      <AdminPanelButton modalFunction={setProductVisible} buttonTitle={"Add/Edit/Remove products"}/>
 
       <CreateType show={typeVisible} onHide={() => setTypeVisible(false)}/>
       <CreateBrand show={brandVisible} onHide={() => setBrandVisible(false)}/>

@@ -1,13 +1,15 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Button, Form, Modal, Table} from "react-bootstrap";
-import {createType, updateType} from "../../http/productAPI.js";
+import React, {useContext, useEffect, useState} from 'react';
+import {Button, FloatingLabel, Form, Modal, Table} from "react-bootstrap";
+import {createType, deleteType, fetchBrands, fetchProducts, fetchTypes, updateType} from "../../http/productAPI.js";
 import {Context} from "../../main.jsx";
+import {observer} from "mobx-react-lite";
 
-const CreateType = ({show, onHide}) => {
+const CreateType = observer(({show, onHide}) => {
   const {typeStore} = useContext(Context); // Данные о товаре из стора
-  const [value, setValue] = useState('');
+  const [newTypeField, setNewTypeField] = useState('');
   const [editedTypeName, setEditedTypeName] = useState('');
   const [initialTypeName, setInitialTypeName] = useState('');
+  const [changesMade, setChangesMade] = useState(false);
   const [selectedTypeField, setSelectedTypeField] = useState(null);
   const [editingState, setEditingState] = useState(false);
 
@@ -19,29 +21,64 @@ const CreateType = ({show, onHide}) => {
     }
   }, [editingState, selectedTypeField]);
 
-  // Функция создания/добавления нового типа
-  const addType = () => {
-    createType({name: value}).then(data => {
-        setValue("")
-        onHide()
+  useEffect(() => { // Получаем типы из БД
+    const fetchData = async () => {
+      if (changesMade) {
+        try {
+          const data = await fetchTypes();
+          typeStore.setTypes(data);
+          setChangesMade(false); // Сбрасываем флаг после успешного обновления данных
+        } catch(e) {
+          alert("Error fetching types: " + e.message);
+          setChangesMade(false); // В случае ошибки тоже сбрасываем флаг
+        }
       }
-    );
+    };
+    fetchData();
+}, [changesMade])
+
+  // Функция создания/добавления нового типа
+  async function addType() {
+    try {
+      await createType({name: newTypeField});
+      setNewTypeField(""); // Сбрасываем поле ввода
+      setChangesMade(true); // Устанавливаем флаг, чтобы обновить данные после успешного запроса
+    } catch(e) {
+      alert("Error adding type: " + e.message);
+    }
   }
 
   // Функция изменения нозвания типа
   const editType = (id, name) => {
+    setEditingState(true)
     setInitialTypeName(name);
     setSelectedTypeField(id);
     setEditedTypeName(name);
-    setEditingState(true)
+  }
+
+  async function removeType(id) {
+    try {
+      await deleteType(id);
+      setEditingState(false);
+      setChangesMade(true); // Устанавливаем флаг после успешного запроса
+    } catch (e) {
+      alert("Error removing type: " + e.message);
+    }
   }
 
   const restoreInitialTypeName = () => {
+    setEditingState(false);
     setEditedTypeName(initialTypeName);
   }
 
-  const saveNameChanges = () => {
-    setEditingState(false);
+  async function saveNameChanges(id, newName) {
+    try {
+      await updateType(id, {name: newName});
+      setEditingState(false);
+      setChangesMade(true); // Устанавливаем флаг после успешного запроса
+    } catch (e) {
+      alert("Error updating type: " + e.message);
+    }
   }
 
   return (
@@ -86,7 +123,7 @@ const CreateType = ({show, onHide}) => {
                         <Button
                           variant={"outline-warning"}
                           style={{width: "65px"}}
-                          onClick={saveNameChanges}
+                          onClick={() => saveNameChanges(type.id, editedTypeName)}
                         >
                           Save
                         </Button>
@@ -102,28 +139,30 @@ const CreateType = ({show, onHide}) => {
                     :
                     <td className={"d-flex justify-content-between"}>
                       <Form.Control
-                        disabled
-                        className={"bg-transparent text-white border-0 p-0"}
+                        plaintext
+                        readOnly
+                        className={"text-white"}
                         value={type.name}
-                        style={{width: "200px", height: "38px"}}
+                        style={{width: "200px"}}
                       />
                       <div
                         className={"d-flex justify-content-between"}
                         style={{width: "170px", paddingLeft: "10px"}}
                       >
-                      <Button
-                        variant={"warning"}
-                        onClick={() => editType(type.id, type.name)}
-                        style={{width: "65px"}}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant={"danger"}
-                        style={{width: "80px"}}
-                      >
-                        Delete
-                      </Button>
+                        <Button
+                          variant={"warning"}
+                          onClick={() => editType(type.id, type.name)}
+                          style={{width: "65px"}}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant={"danger"}
+                          onClick={() => removeType(type.id)}
+                          style={{width: "80px"}}
+                        >
+                          Delete
+                        </Button>
                       </div>
                     </td>
                   }
@@ -132,27 +171,27 @@ const CreateType = ({show, onHide}) => {
           </tbody>
         </Table>
 
-        <Form className={"d-flex justify-content-between"}>
-          <Form.Control
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            placeholder={"Enter here type title..."}
-            style={{width: "78%"}}
-          />
-          <Button
-            variant={"outline-success"}
-            onClick={addType}
-            style={{width: "20%"}}
-          >
-            Add type
-          </Button>
+        <Form>
+          <Form.Group className={"d-flex"}>
+            <Form.Control
+              value={newTypeField}
+              type={"text"}
+              onChange={e => setNewTypeField(e.target.value)}
+              size={"lg"}
+              placeholder={"Enter here type name..."}
+            />
+            <Button
+              variant={"outline-success"}
+              onClick={addType}
+              className={"w-25 ms-2"}
+            >
+              Add type
+            </Button>
+          </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant={"success"} onClick={() => console.log("Changes submitted.")}>Submit changes</Button>
-      </Modal.Footer>
     </Modal>
   );
-};
+});
 
 export default CreateType;

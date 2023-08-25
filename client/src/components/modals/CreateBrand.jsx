@@ -1,44 +1,24 @@
-import React, {useState} from 'react';
-import {Button, Form, Modal} from "react-bootstrap";
-import {createBrand} from "../../http/productAPI.js";
+import {useContext} from 'react';
+import {createBrand, updateBrand, deleteBrand, fetchBrands} from "../../http/productAPI.js";
+import {observer} from "mobx-react-lite";
+import {Context} from "../../main.jsx";
+import CreateEntity from "./CreateEntity.jsx";
 
-const CreateBrand = ({show, onHide}) => {
-  const [value, setValue] = useState('');
-  // Функция создания/добавления нового бренда
-  const addBrand = () => {
-    createBrand({name: value}).then(data => {
-        setValue("")
-        onHide()
-      }
-    );
-  }
+const CreateBrand = observer(({show, onHide}) => {
+  const {brandStore} = useContext(Context);
   return (
-    <Modal
-      show={show}
+    <CreateEntity
       onHide={onHide}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Add brand
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form>
-          <Form.Control
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            placeholder={"Enter here brand title..."}
-          />
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant={"outline-success"} onClick={addBrand}>Add brand</Button>
-      </Modal.Footer>
-    </Modal>
+      show={show}
+      entityType={"brand"}
+      storeSetEntity={brandStore.setBrands.bind(brandStore)}
+      storeEntityArr={brandStore.brands}
+      createEntity={createBrand}
+      updateEntity={updateBrand}
+      deleteEntity={deleteBrand}
+      fetchEntities={fetchBrands}
+    />
   );
-};
+});
 
 export default CreateBrand;

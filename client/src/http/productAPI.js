@@ -22,9 +22,21 @@ export const fetchTypes = async () => {
   const {data} = await $host.get('api/type');
   return data;
 }
+
 // Запрос на создание/добавление нового бренда
 export const createBrand = async (brand) => {
   const {data} = await $authHost.post('api/brand', brand);
+  return data;
+}
+// Запрос на изменение бренда
+export const updateBrand = async (id, updatedBrand) => {
+  const {data} = await $authHost.put(`api/brand/${id}`, updatedBrand);
+  return data;
+}
+
+// Запрос на удаление бренда
+export const deleteBrand = async (id) => {
+  const {data} = await $authHost.delete(`api/brand/${id}`);
   return data;
 }
 // Запрос на получение всех брендов

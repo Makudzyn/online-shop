@@ -4,6 +4,7 @@ import CreateType from "../components/modals/CreateType.jsx";
 import CreateBrand from "../components/modals/CreateBrand.jsx";
 import CreateNewProduct from "../components/modals/CreateNewProduct.jsx";
 import {AdminPanelButton} from "../components/AdminPanelButton.jsx";
+import CreateEntity from "../components/modals/CreateEntity.jsx";
 
 const AdminPanel = () => {
   const [typeVisible, setTypeVisible] = useState(false);

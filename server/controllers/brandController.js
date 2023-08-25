@@ -29,4 +29,21 @@ async function deleteOne(req, res, next) {
   }
 }
 
-module.exports = {create, getAll, deleteOne}
+// Функция обновления бренда по ID
+async function update(req, res, next) {
+  const {id} = req.params; // Из параметров получаем ID бренда, который нужно обновить
+  const {name} = req.body; // Из тела запроса получаем новое название бренда
+  try {
+    const brand = await Brand.findOne({where:{id}}); // Находим бренд
+    if (!brand) {
+      return next(ApiError.notFound('Type not found')); // Если бренда не найден, возвращаем ошибку
+    }
+    brand.name = name; // Обновляем название бренда
+    await brand.save(); // Сохраняем обновленные данные
+    return res.json(brand); // Возвращаем обновленный бренда
+  } catch (e) {
+    return next(ApiError.internal(e.message)); // Если не удалось обновить
+  }
+}
+
+module.exports = {create, getAll, deleteOne, update}

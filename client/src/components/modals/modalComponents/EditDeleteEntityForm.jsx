@@ -14,7 +14,7 @@ const EditDeleteEntityForm = (
       setEditingState(false); // Выходим из режима редактирования
       setChangesMade(true); // Устанавливаем флаг после успешного запроса
     } catch (e) {
-      handleError(e, `removing${entityType}`); // Возвращаем ошибку
+      handleError(e, `removing ${entityType}`); // Возвращаем ошибку
     }
   }
   // Функция перехода в режим редактирования поля

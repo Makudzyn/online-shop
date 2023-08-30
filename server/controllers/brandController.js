@@ -36,7 +36,7 @@ async function update(req, res, next) {
   try {
     const brand = await Brand.findOne({where:{id}}); // Находим бренд
     if (!brand) {
-      return next(ApiError.notFound('Type not found')); // Если бренда не найден, возвращаем ошибку
+      return next(ApiError.notFound('Brand not found')); // Если бренда не найден, возвращаем ошибку
     }
     brand.name = name; // Обновляем название бренда
     await brand.save(); // Сохраняем обновленные данные

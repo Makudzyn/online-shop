@@ -3,9 +3,10 @@ const router = new Router();
 const productController = require('../controllers/productController.js');
 const checkRole = require("../middleware/checkAuthAndRoleMiddleware");
 
-router.post('/', checkRole("ADMIN"), productController.create)
 router.get('/', productController.getAll)
 router.get('/:id', productController.getOne)
-router.delete('/:id', productController.deleteOne)
+router.post('/', checkRole("ADMIN"), productController.create)
+router.put('/:id', checkRole("ADMIN"), productController.update)
+router.delete('/:id', checkRole("ADMIN"), productController.deleteOne)
 
 module.exports = router;

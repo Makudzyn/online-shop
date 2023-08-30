@@ -9,7 +9,7 @@ const AddEntityForm = ({createEntityDB, handleError, entityField, setEntityField
       setEntityField(""); // Сбрасываем поле ввода
       setChangesMade(true); // Устанавливаем флаг, чтобы обновить данные после успешного запроса
     } catch(e) {
-      handleError(e, `adding${entityType}`); // Возвращаем ошибку
+      handleError(e, `adding ${entityType}`); // Возвращаем ошибку
     }
   }
   return (

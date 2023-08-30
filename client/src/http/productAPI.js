@@ -33,7 +33,6 @@ export const updateBrand = async (id, updatedBrand) => {
   const {data} = await $authHost.put(`api/brand/${id}`, updatedBrand);
   return data;
 }
-
 // Запрос на удаление бренда
 export const deleteBrand = async (id) => {
   const {data} = await $authHost.delete(`api/brand/${id}`);
@@ -44,9 +43,20 @@ export const fetchBrands = async () => {
   const {data} = await $host.get('api/brand');
   return data;
 }
+
 // Запрос на создание/добавление нового товара
 export const createProduct = async (product) => {
   const {data} = await $authHost.post('api/product', product);
+  return data;
+}
+// Запрос на изменение товара
+export const updateProduct = async (id, updatedProduct) => {
+  const {data} = await $authHost.put(`api/product/${id}`, updatedProduct);
+  return data;
+}
+// Запрос на удаление товара
+export const deleteProduct = async (id) => {
+  const {data} = await $authHost.delete(`api/product/${id}`);
   return data;
 }
 // Запрос на получение всех товаров

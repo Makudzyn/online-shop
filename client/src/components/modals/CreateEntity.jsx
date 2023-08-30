@@ -27,7 +27,7 @@ const CreateEntity = (
   }, [editingState, selectedField]);
 
   const handleError = (error, action) => { // Функция алерта при ошибках
-    alert(`${action}: ${error.message}`);
+    alert(`Error ${action}: ${error.message}`);
   };
 
   useEffect(() => { // Подгружаем сущности из БД

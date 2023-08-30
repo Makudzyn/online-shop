@@ -61,6 +61,38 @@ async function getOne(req, res) {
   return res.json(product);
 }
 
+// Функция обновления товара по ID
+async function update(req, res, next) {
+  try {
+    const {id} = req.params; // Из параметров получаем ID товара, который нужно обновить
+    let {name, price, brandId, typeId, info} = req.body; // Из тела запроса получаем нужные для обновления поля
+    const {img} = req.files; // Из запроса получаем файл, картинку товара
+    let fileName = `${uuid.v4()}.jpg`; // Генерируем уникальное имя для файла
+    await img.mv(path.resolve(__dirname, "..", 'static', fileName)); // Перемещаем файлы полученные от клиента в папку static
+
+    const product = await Product.findOne({where: {id}}); // Находим товар
+    if (info) { // Если есть дополнительные характеристики
+      info = JSON.parse(info); // Парсим, так как в из FormData получаем строку
+      info.map(i => ProductInfo.create({ // Для каждого элемента массива создаем ProductInfo
+        productId: product.id,
+        title: i.title,
+        description: i.description,
+      }))
+    }
+    product.name = name;
+    product.price = price;
+    product.brandId = brandId;
+    product.typeId = typeId;
+    product.info = info;
+    product.img = fileName;
+
+    await product.save();
+    return res.json(product);
+  } catch (e) {
+    next(ApiError.internal(e.message)); // Если при обновлении произошла ошибка
+  }
+}
+
 // Функция удаления товара по ID
 async function deleteOne(req, res, next) {
   const {id} = req.params; // Из параметров получаем ID товара, который нужно удалить
@@ -76,4 +108,4 @@ async function deleteOne(req, res, next) {
   }
 }
 
-module.exports = {create, getAll, getOne, deleteOne}
+module.exports = {create, update, getAll, getOne, deleteOne}

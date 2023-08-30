@@ -10,6 +10,7 @@ const errorHandler = require('./middleware/errorHandlingMiddleware')
 const PORT = process.env.PORT || 5000; // Порт из файла переменных окружения, если не задан присваиваем 5000
 
 const app = express();
+
 app.use(cors()); // Отправка запросов с браузера
 app.use(express.json()); // Работа с JSON-форматом
 app.use(express.static(path.resolve(__dirname, "static"))); // Указываем что файлы из папки нужно раздавать как статику

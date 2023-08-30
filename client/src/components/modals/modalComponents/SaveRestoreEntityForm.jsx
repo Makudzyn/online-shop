@@ -7,17 +7,17 @@ const SaveRestoreEntityForm = (
     handleError, inputRefs, editedEntityName, entityType,
     setEditedEntityName, initialEntityName, entityId
   }) => {
-  // Функция изменения названия типа
+  // Функция изменения названия сущности
   async function updateEntity(id, newName) {
     try {
-      await updateEntityDB(id, {name: newName}); // Изменяем название типа с помощью функции-запроса
+      await updateEntityDB(id, {name: newName}); // Изменяем название сущности с помощью функции-запроса
       setEditingState(false); // Выходим из режима редактирования
       setChangesMade(true); // Устанавливаем флаг после успешного запроса
     } catch (e) {
-      handleError(e, `updating${entityType}`); // Возвращаем ошибку
+      handleError(e, `updating ${entityType}`); // Возвращаем ошибку
     }
   }
-  // Функция восстановления начального названия типа, такого которое имел тип в начале редактирования
+  // Функция восстановления начального названия сущности, такого которое имела сущность в начале редактирования
   const restoreInitialName = () => {
     setEditingState(false); // Выходим из режима редактирования
     setEditedEntityName(initialEntityName); // Записываем первоначальное имя

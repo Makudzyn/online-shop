@@ -5,13 +5,13 @@ import {Context} from "../../main.jsx";
 import CreateEntity from "./CreateEntity.jsx";
 
 const CreateBrand = observer(({show, onHide}) => {
-  const {brandStore} = useContext(Context);
+  const {brandStore} = useContext(Context); // Данные о бренде из стора
   return (
     <CreateEntity
       onHide={onHide}
       show={show}
       entityType={"brand"}
-      storeSetEntity={brandStore.setBrands.bind(brandStore)}
+      storeSetEntity={brandStore.setBrands.bind(brandStore)} // Передаем метод с привязкой к хранилищу типов
       storeEntityArr={brandStore.brands}
       createEntity={createBrand}
       updateEntity={updateBrand}

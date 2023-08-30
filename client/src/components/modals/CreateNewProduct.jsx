@@ -63,6 +63,12 @@ const CreateNewProduct = ({show, onHide}) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        <Form.Control
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder={"Enter product name..."}
+          className={"mt-2"}
+        />
         <Dropdown data-bs-theme="dark" className={"mt-2"} >
           <Dropdown.Toggle variant={"outline-dark"}>
             {selectedType.name || "Select type of new product"}
@@ -78,6 +84,7 @@ const CreateNewProduct = ({show, onHide}) => {
             )}
           </Dropdown.Menu>
         </Dropdown>
+
         <Dropdown data-bs-theme="dark" className={"mt-2"} >
           <Dropdown.Toggle variant={"outline-dark"}>
             {selectedBrand.name || "Select brand of new product"}
@@ -93,12 +100,7 @@ const CreateNewProduct = ({show, onHide}) => {
             )}
           </Dropdown.Menu>
         </Dropdown>
-        <Form.Control
-          value={name}
-          onChange={e => setName(e.target.value)}
-          placeholder={"Enter product name..."}
-          className={"mt-2"}
-        />
+
         <Form.Control
           value={price}
           onChange={e => setPrice(Number(e.target.value))}

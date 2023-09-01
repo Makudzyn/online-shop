@@ -8,6 +8,7 @@ import App from "./App.jsx";
 import TypeStore from "./store/TypeStore.js";
 import BrandStore from "./store/BrandStore.js";
 import PaginationStore from "./store/PaginationStore.js";
+import CartStore from "./store/CartStore.js";
 
 export const Context = createContext(null);
 
@@ -19,7 +20,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         productStore: new ProductStore(),
         typeStore: new TypeStore(),
         brandStore: new BrandStore(),
-        paginationStore: new PaginationStore()
+        paginationStore: new PaginationStore(),
+        cartStore: new CartStore()
       }}>
         <App/>
       </Context.Provider>

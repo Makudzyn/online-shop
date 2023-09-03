@@ -11,10 +11,6 @@ export default class CartStore {
     this._cartProducts = cartProducts;
   }
 
-  addCartProduct(cartProduct) {
-    this._cartProducts = [...this._cartProducts, cartProduct];
-  }
-
   get cartProducts() {
     return this._cartProducts;
   }

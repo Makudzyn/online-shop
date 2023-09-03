@@ -5,9 +5,10 @@ import cartIco from '../assets/shoppingCart24.svg';
 import { useNavigate } from "react-router-dom";
 import { PRODUCT_ROUTE, REACT_APP_API_URL } from "../utils/consts.js";
 import {Context} from "../main.jsx";
+import {addProductToCart} from "../http/cartAPI.js";
 
-const ProductItem = ({ product }) => {
-  const {cartStore} = useContext(Context);
+const ProductItem = ({product}) => {
+  const {cartStore, userStore} = useContext(Context);
   const navigate = useNavigate();
   const handleProductClick = () => {
     navigate(`${PRODUCT_ROUTE}/${product.id}`);
@@ -61,7 +62,11 @@ const ProductItem = ({ product }) => {
                 cursor='pointer'
                 width="30"
                 height="30"
-                onClick={() => cartStore.addCartProduct(product)}
+                onClick={() => {
+                  console.log(userStore.user, product.id)
+                  addProductToCart(userStore.user.id, product.id)
+                }
+                }
               />
             </svg>
           </div>

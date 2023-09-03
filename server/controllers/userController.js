@@ -55,10 +55,12 @@ async function deleteOne(req, res, next) {
   const {id} = req.params; // Получаем ID из параметров
   try {
     const user = await User.findOne({where: {id}}); // Находим пользователя
+    const cart = await Cart.findOne({where: {id}}); // Находим корзину пользователя
     if (!user) {
       return next(ApiError.notFound('User not found')); // Если пользователь не был найден возвращаем ошибку
     }
     await user.destroy(); // Удаляем пользователя
+    await cart.destroy(); // Удаляем карзину привязанную к пользователю
     return res.status(204).end(); // Возвращаем ответ с кодом 204 No Content
   } catch (e) {
     return next(ApiError.internal(e.message)); // Если не удалось удалить пользователя

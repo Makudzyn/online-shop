@@ -1,15 +1,29 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Context} from "../main.jsx";
 import {Card, CardImg, Col, Container, Row} from "react-bootstrap";
 import {REACT_APP_API_URL} from "../utils/consts.js";
+import {observer} from "mobx-react-lite";
+import {fetchCartProducts} from "../http/cartAPI.js";
 
-const Cart = () => {
+const Cart = observer(() => {
   const {cartStore} = useContext(Context); // Данные о товарах в корзине из стора
+  useEffect(() => { // Подгружаем сущности из БД
+    const fetchData = async () => {
+      try {
+        const data = await fetchCartProducts(); // Подгружаем сущности
+        console.log(data);
+        cartStore.setCartProducts(data); // Записываем в стор
+      } catch(e) {
+        // handleError(e, `fetching ${entityType}`); // Возвращаем ошибку
+        throw new e.status(404).message("Error fetching data");
+      }
+    };
+    fetchData(); // Вызываем функцию
+  }, [])
   return (
     <Container fluid>
-      {cartStore.cartProducts.map(prod => console.log(prod))}
       {cartStore.cartProducts.map(cartProduct =>
-        <Row>
+        <Row key={cartProduct.id}>
           <Col>
             <Card className={"d-flex justify-content-between flex-row border-0 border-bottom"}>
               <div
@@ -21,7 +35,7 @@ const Cart = () => {
                   height: '250px',
                   width: '250px',
                   marginRight: '15px'
-              }}
+                }}
                 // onClick={handleProductClick}
               >
                 <CardImg
@@ -64,6 +78,6 @@ const Cart = () => {
       )}
     </Container>
   );
-};
+});
 
 export default Cart;

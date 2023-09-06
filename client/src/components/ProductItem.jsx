@@ -1,25 +1,22 @@
-import React, {useContext} from 'react';
-import {Card, CardImg, Col, Image} from "react-bootstrap";
+import React from 'react';
+import {Card, CardImg, Col} from "react-bootstrap";
 import starIco from '../assets/star.png';
 import cartIco from '../assets/shoppingCart24.svg';
 import { useNavigate } from "react-router-dom";
 import { PRODUCT_ROUTE, REACT_APP_API_URL } from "../utils/consts.js";
-import {Context} from "../main.jsx";
 import {addProductToCart} from "../http/cartAPI.js";
+import {handleProductClick} from "../functions/handleProductClick.js";
+import {getUserId} from "../functions/getUserIdFromToken.js";
 
 const ProductItem = ({product}) => {
-  const {cartStore, userStore} = useContext(Context);
   const navigate = useNavigate();
-  const handleProductClick = () => {
-    navigate(`${PRODUCT_ROUTE}/${product.id}`);
-  };
 
   return (
     <Col md={3} className="p-0 mt-3">
       <Card style={{width: "100%", height: "100%", borderRadius: 0}}>
         <div
           style={{display: "flex", justifyContent: "center", alignItems: "center",  cursor: 'pointer', height: '280px'}}
-          onClick={handleProductClick}
+          onClick={() => handleProductClick(navigate, PRODUCT_ROUTE, product.id)}
         >
           <CardImg
             variant="top"
@@ -31,13 +28,13 @@ const ProductItem = ({product}) => {
         <Card.Body>
           <Card.Title
             style={{
-              height: '30px',
+              height: '50px',
               marginBottom: '5px',
               overflow: 'hidden',
               cursor: 'pointer',
-              lineHeight: '16px',
+              lineHeight: 1.12,
             }}
-            onClick={handleProductClick}
+            onClick={() => handleProductClick(navigate, PRODUCT_ROUTE, product.id)}
           >
             {product.name}
           </Card.Title>
@@ -62,11 +59,9 @@ const ProductItem = ({product}) => {
                 cursor='pointer'
                 width="30"
                 height="30"
-                onClick={() => {
-                  console.log(userStore.user, product.id)
-                  addProductToCart(userStore.user.id, product.id)
-                }
-                }
+                onClick={() =>
+                  addProductToCart({cartId: getUserId(), productId: product.id})
+              }
               />
             </svg>
           </div>

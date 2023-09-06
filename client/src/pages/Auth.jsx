@@ -23,7 +23,7 @@ const Auth = observer(() => { // Используем observer чтобы MobX �
       } else {
         data = await registration(email, password);
       }
-      userStore.setUser(userStore);
+      userStore.setUser(data);
       userStore.setIsAuth(true);
       navigate(SHOP_ROUTE);
     } catch (e) {

@@ -3,14 +3,23 @@ const {CartProduct, Cart} = require("../models/models");
 
 // Функция добавления нового товара в корзину
 async function addToCart(req, res, next) {
-  const {cartId, productId} = req.body;
+  let {cartId, productId} = req.body;
   try {
-    const cartProduct = await CartProduct.create({cartId, productId});
-    return res.json(cartProduct);
+    const existingCartItem = await CartProduct.findOne({where: {cartId, productId}}); // Проверяем, есть ли уже такой товар в корзине для данной пары cartId и productId
+
+    if (existingCartItem) { // Если товар уже есть в корзине, обновляем количество
+      existingCartItem.quantity++;
+      await existingCartItem.save();
+      return res.json(existingCartItem);
+    } else {
+      const cartProduct = await CartProduct.create({cartId, productId, quantity: 1}); //Если товара нет в корзине, добавляем его
+      return res.json(cartProduct);
+    }
   } catch (error) {
     return next(ApiError.internal('Unable to add product to cart'));
   }
 }
+
 
 // Функция получения всех товаров в корзине
 async function getAllCartProducts(req, res) {

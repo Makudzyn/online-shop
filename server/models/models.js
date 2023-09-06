@@ -15,6 +15,7 @@ const Cart = sequelize.define('cart', {
 
 const CartProduct = sequelize.define('cart_product', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+  quantity: {type: DataTypes.INTEGER}
 })
 
 const Rating = sequelize.define('rating', {
@@ -32,7 +33,7 @@ const Product = sequelize.define('product', {
 
 const ProductInfo = sequelize.define('product_info', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-  title: {type: DataTypes.STRING, unique: true, allowNull: false},
+  title: {type: DataTypes.STRING, unique: false, allowNull: false},
   description: {type: DataTypes.STRING, allowNull: false},
 })
 

@@ -2,17 +2,16 @@ import {makeAutoObservable} from "mobx";
 
 export default class CartStore {
   constructor() {
-    this._cartProducts = [];
+    this._cartProductPair = [];
     makeAutoObservable(this); // Для того чтобы Mobx следил за изменениями переменных
                               // и при их изменении компоненты будут перерендериться
   }
 
-  setCartProducts(cartProducts) {
-    this._cartProducts = cartProducts;
+  setCartProductPair(cartProductPair) {
+    this._cartProductPair = cartProductPair;
   }
 
-  get cartProducts() {
-    return this._cartProducts;
+  get cartProductPair() {
+    return this._cartProductPair;
   }
-
 }

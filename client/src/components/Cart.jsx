@@ -1,14 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../main.jsx";
-import {Button, Card, CardImg, Col, Container, Row} from "react-bootstrap";
+import {Card, CardImg, Col, Container, Row} from "react-bootstrap";
 import {PRODUCT_ROUTE, REACT_APP_API_URL} from "../utils/consts.js";
 import {observer} from "mobx-react-lite";
-import {addProductToCart, fetchCartProducts} from "../http/cartAPI.js";
+import {fetchCartProducts} from "../http/cartAPI.js";
 import {fetchProducts} from "../http/productAPI.js";
 import {handleProductClick} from "../functions/handleProductClick.js";
 import {useNavigate} from "react-router-dom";
 import closeIco from "../assets/close.svg";
-import {getUserId} from "../functions/getUserIdFromToken.js";
+import minusIco from "../assets/plus.svg";
+import plusIco from "../assets/minus.svg";
+
 
 const Cart = observer(() => {
   const navigate = useNavigate();
@@ -23,9 +25,25 @@ const Cart = observer(() => {
         const dataProduct = await fetchProducts(); // Подгружаем товары
         cartStore.setCartProductPair(dataCart); // Записываем в стор
         productStore.setProducts(dataProduct.rows); // Записываем в стор
-        const productIds = cartStore.cartProductPair.map(pair => pair.productId); // Получение списка ID товаров из cartStore
-        const filteredProducts = productStore.products.filter(product => productIds.includes(product.id)); // Фильтрация товаров из productStore на основе productIds
-        setCartProducts(filteredProducts); // Записываем продукты которые находяться в корзине
+        const cartProductsArr = cartStore.cartProductPair; // Получаем пары товаров из корзины
+
+        const allProducts = productStore.products; // Получаем все товары
+
+        const cartProducts = cartProductsArr.map(pair => { // Формируем новый массив товаров в корзине с учетом количества
+          const product = allProducts.find(product => product.id === pair.productId);
+          if (product) {
+            return {
+              ...product,
+              quantity: pair.quantity
+            };
+          }
+          return null;
+        }).filter(Boolean);
+
+        setProductsSum(cartProducts.reduce((sum, product) => sum + product.price, 0)) // Считаем сумму товаров в корзине
+
+        setCartProducts(cartProducts);
+
       } catch(e) {
         // handleError(e, `fetching ${entityType}`); // Возвращаем ошибку
         throw new Error('Unable to add product to cart');
@@ -34,6 +52,9 @@ const Cart = observer(() => {
     fetchData(); // Вызываем функцию
   }, [])
 
+  const addQuantity = () => {
+
+  }
 
   return (
     <Container fluid>
@@ -64,56 +85,92 @@ const Cart = observer(() => {
                     style={{maxWidth: '85%', maxHeight: '85%'}}
                   />
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    height: '50px',
-                    width: '100%',
-                    margin: '5px',
-                    overflow: 'hidden',
-                    cursor: 'pointer',
-                    lineHeight: 1.12,
-                  }}
-                  onClick={() => handleProductClick(navigate, PRODUCT_ROUTE, cartProduct.id)}
-                >
-                  <Card.Title className={"d-flex justify-content-start"}>
-                    {cartProduct.name}
-                  </Card.Title>
-                </div>
-                <svg
-                  width={50}
-                  height={50}
-                  viewBox="0 0 50 50"
-                  style={{margin: "5px"}}
-                >
-                  <image
-                    xlinkHref={closeIco}
-                    cursor='pointer'
-                    width="50"
-                    height="50"
-                    // onClick={() =>
-                    //
-                    // }
-                  />
-                </svg>
-            </div>
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <svg><image></image></svg>
-                  <p>{cartProduct.quantity}</p>
-                  <svg><image></image></svg>
-                </div>
-                <p
-                  style={{
-                    color: '#221f1f',
-                    fontSize: '24px',
-                    margin: '5px 0'
-                  }}
-                >
-                  {cartProduct.price}
-                  <span>₴</span>
-                </p>
+                <div className={"d-flex justify-content-between flex-column w-100"}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      height: '50px',
+                      width: '100%',
+                      margin: '5px',
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      lineHeight: 1.12,
+                    }}
+                    onClick={() => handleProductClick(navigate, PRODUCT_ROUTE, cartProduct.id)}
+                  >
+                    <Card.Title className={"d-flex justify-content-start"}>
+                      {cartProduct.name}
+                    </Card.Title>
+                    <svg
+                      width={34}
+                      height={34}
+                      viewBox="0 0 34 34"
+                      style={{margin: "5px"}}
+                    >
+                      <image
+                        xlinkHref={closeIco}
+                        cursor='pointer'
+                        width="34"
+                        height="34"
+                        // onClick={() =>
+                        //
+                        // }
+                      />
+                    </svg>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className={"d-flex justify-content-center flex-row w-100"}>
+                      <svg
+                        width={42}
+                        height={42}
+                        viewBox="0 0 42 42"
+                        style={{margin: "5px"}}
+                      >
+                        <image
+                          xlinkHref={minusIco}
+                          cursor='pointer'
+                          width="42"
+                          height="42"
+                        />
+                      </svg>
+                      <p
+                        style={{
+                          color: '#221f1f',
+                          fontSize: '24px',
+                          margin: '5px',
+                          fontWeight: '600',
+                        }}
+                      >
+                        {cartProduct.quantity}
+                      </p>
+                      <svg
+                        width={42}
+                        height={42}
+                        viewBox="0 0 42 42"
+                        style={{margin: "5px"}}
+                      >
+                        <image
+                          xlinkHref={plusIco}
+                          cursor='pointer'
+                          width="42"
+                          height="42"
+                        />
+                      </svg>
+                    </div>
+                    <p
+                      style={{
+                        color: '#221f1f',
+                        fontSize: '24px',
+                        margin: '5px 0'
+                      }}
+                    >
+                      {cartProduct.price}
+                      <span>₴</span>
+                    </p>
+                  </div>
+              </div>
               </div>
             </Card>
           </Col>

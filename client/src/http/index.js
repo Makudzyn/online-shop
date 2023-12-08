@@ -11,6 +11,7 @@ const $authHost = axios.create({
 })
 // Интерцептор который к запросам добавляет токен, котороый достает из localStorage
 const authInterceptor = config => {
+  console.log(typeof config);
   config.headers.authorization = `Bearer ${localStorage.getItem('token')}`;
   return config;
 }

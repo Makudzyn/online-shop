@@ -1,5 +1,5 @@
 const ApiError = require("../error/ApiError.js")
-const {CartProduct, Cart} = require("../models/models");
+const {CartProduct} = require("../models/models");
 
 // Функция добавления нового товара в корзину
 async function addToCart(req, res, next) {
